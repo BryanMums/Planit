@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Auth; //Pour pouvoir utiliser les méthodes de Auth
 
+use App\User;
+
 
 class HomeController extends Controller
 {
@@ -26,7 +28,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $id = Auth::id();
-        return view('home', compact('id'));
+        $user = Auth::user();
+        return view('home', compact('user'));
     }
 }

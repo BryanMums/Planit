@@ -17,4 +17,29 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::get('autocomplete', function()
+{
+    return view('autocomplete');
+});
+
+Route::get('getusers', function()
+{
+    $term = strtolower(Request::input('term'));
+
+    $users = App\User::where('email','LIKE', '%'.$term.'%')->orWhere('name', 'LIKE', '%'.$term.'%')->get();
+
+    foreach ($users as $user) {
+      $return_array[] = array('value' => $user->email, 'id' => $user->id);
+    }
+    return Response::json($return_array);
+});
+Route::get('/project/create', 'ProjectsController@create'); //Création d'un nouveau projet
+Route::get('/project/{project}', 'ProjectsController@index'); //Liste des projets de l'utilisateur
+
+Route::post('/project/create', 'ProjectsController@store'); //Store
+Route::delete('/project/{project}/delete', 'ProjectsController@delete');
+
+Route::get('/project/{project}/collaborater/create', 'ProjectsController@createCollaborater');
+Route::post('/project/{project}/collaborater/create', 'ProjectsController@storeCollaborater');
+
 Route::get('/home', 'HomeController@index');

@@ -4,16 +4,15 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Project extends Model
+class Collaborater extends Model
 {
-    //
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function collaboraters()
+    public function project()
     {
-      return $this->hasMany(Collaborater::class);
+      return $this->belongsTo(Project::class);
     }
 }
