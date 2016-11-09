@@ -35,9 +35,12 @@
               <th>Action</th>
             </tr>
             @foreach ($project->collaboraters as $collaborater)
-              <tr>
+              <tr id="collaborater{{$collaborater->id}}">
                 <td>{{$collaborater->user->name}}</td>
-                <td><a href="#" class="btn btn-sm btn-warning">Modifier</a><a href="#" class="btn btn-sm btn-danger">Supprimer</a></td>
+                <td>
+                  <a href="#" class="btn btn-sm btn-warning">Modifier</a>
+                  <button class="btn btn-sm btn-danger btn-delete delete-collaborater" value="{{$collaborater->id}}">Supprimer</button>
+                </td>
               </tr>
             @endforeach
 
@@ -64,4 +67,33 @@
     <a href="#" class="btn btn-default">Gestion du budget/Coûts</a>
     <a href="#" class="btn btn-default">Voir page statistiques</a>
 </div>
+<meta name="_token" content="{!! csrf_token() !!}" />
+<script>
+$(document).ready(function(){
+  $.ajaxSetup(
+{
+    headers:
+    {
+        'X-CSRF-Token': $('input[name="_token"]').val()
+    }
+});
+//delete task and remove it from list
+    $('.delete-collaborater').click(function(){
+        var collaborater_id = $(this).val();
+
+        $.ajax({
+            type: "DELETE",
+            url: '/collaborater/' + collaborater_id,
+            success: function (data) {
+                console.log(data);
+
+                $("#collaborater" + collaborater_id).remove();
+            },
+            error: function (data) {
+                console.log('Error:', data);
+            }
+        });
+    });
+  });
+</script>
 @endsection

@@ -10,6 +10,7 @@
 | to using a Closure or controller method. Build something great!
 |
 */
+use App\Collaborater;
 
 Route::get('/', function () {
     return view('welcome');
@@ -41,5 +42,9 @@ Route::delete('/project/{project}/delete', 'ProjectsController@delete');
 
 Route::get('/project/{project}/collaborater/create', 'ProjectsController@createCollaborater');
 Route::post('/project/{project}/collaborater/create', 'ProjectsController@storeCollaborater');
+Route::delete('/collaborater/{collaborater_id?}',function($collaborater_id){
+    $collaborater = Collaborater::destroy($collaborater_id);
 
+    return Response::json($collaborater);
+});
 Route::get('/home', 'HomeController@index');
