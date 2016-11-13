@@ -9,6 +9,7 @@
           <h2><b>{{ $project->name}}</b> | Nouveau collaborateur</h2>
           <form method="POST" action="/project/{{ $project->id }}/collaborater/create">
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="project_id" value="{{$project->id}}">
             <div class="form-group">
               <label for="name">Email du collaborateur</label>
               <input id="user_search" type="text" name="user_search" class="form-control"/ >
@@ -58,7 +59,7 @@
 
             <div class="form-group">
               <button type="submit" class="btn btn-primary">Créer</button>
-              <a href="/home" class="btn btn-default">Annuler</a>
+              <a href="/project/{{$project->id}}" class="btn btn-default">Annuler</a>
             </div>
           </form>
         </div>

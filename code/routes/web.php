@@ -11,6 +11,7 @@
 |
 */
 use App\Collaborater;
+use App\Resource;
 
 Route::get('/', function () {
     return view('welcome');
@@ -34,17 +35,30 @@ Route::get('getusers', function()
     }
     return Response::json($return_array);
 });
-Route::get('/project/create', 'ProjectsController@create'); //Création d'un nouveau projet
-Route::get('/project/{project}', 'ProjectsController@index'); //Liste des projets de l'utilisateur
 
-Route::post('/project/create', 'ProjectsController@store'); //Store
+/**********************PROJECTS-WEB***********************/
+Route::get('/project/create', 'ProjectsController@create');
+Route::get('/project/{project}', 'ProjectsController@index');
+
+Route::post('/project/create', 'ProjectsController@store');
 Route::delete('/project/{project}/delete', 'ProjectsController@delete');
 
+/**********************COLLABORATERS***********************/
 Route::get('/project/{project}/collaborater/create', 'ProjectsController@createCollaborater');
-Route::post('/project/{project}/collaborater/create', 'ProjectsController@storeCollaborater');
-Route::delete('/collaborater/{collaborater_id?}',function($collaborater_id){
-    $collaborater = Collaborater::destroy($collaborater_id);
 
-    return Response::json($collaborater);
-});
+
+Route::get('/collaborater/{id?}', 'CollaboratersController@get');
+Route::post('/project/{project}/collaborater/create', 'ProjectsController@storeCollaborater');
+Route::put('/collaborater/{id?}', 'CollaboratersController@update');
+Route::delete('/collaborater/{id?}', 'CollaboratersController@destroy');
+
+
+/**********************RESOURCES***********************/
+Route::get('/project/{project}/resource/create', 'ProjectsController@createResource');
+Route::post('/project/{project}/resource/create', 'ProjectsController@storeResource');
+Route::get('/resource/{id?}', 'ResourcesController@get');
+Route::put('/resource/{id?}', 'ResourcesController@update');
+Route::delete('/resource/{id?}', 'ResourcesController@destroy');
+
+
 Route::get('/home', 'HomeController@index');

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth; //Pour pouvoir utiliser les méthodes de Au
 
 use App\Project;
 use App\Collaborater;
+use App\Resource;
 
 use App\Http\Requests;
 
@@ -26,15 +27,6 @@ class ProjectsController extends Controller
     public function create()
     {
       return view('projects.create');
-    }
-
-    public function createCollaborater(Project $project){
-      return view('collaboraters.create', compact('project'));
-    }
-
-    public function delete(Project $project)
-    {
-      return "lol";
     }
 
     public function store(Request $request)
@@ -56,21 +48,48 @@ class ProjectsController extends Controller
       return redirect('/home')->with('status', 'Projet créé !');
     }
 
+    public function delete(Project $project)
+    {
+      return "lol";
+    }
+
+    /*************METHODS COLLABORATER********************/
+    public function createCollaborater(Project $project){
+      return view('collaboraters.create', compact('project'));
+    }
+
     public function storeCollaborater(Project $project, Request $request){
 
       if(Auth::id() != $request->id_user){
-        $collaborater = new Collaborater();
-
-        $collaborater->user_id = $request->id_user;
-        $collaborater->project_id = $project->id;
-        $collaborater->informations_rights = $request->inforadio;
-        $collaborater->gantt_rights = $request->ganttradio;
-        $collaborater->budget_rights = $request->budgetradio;
-
-        $collaborater->save();
+        $col = new CollaboratersController;
+        $col->store($request);
 
         return redirect('/project'.'/'.$project->id)->with('status', 'Nouveau collaborateur ajouté !');
       }
-    
+    }
+      /*************METHODS RESOURCES********************/
+      public function createResource(Project $project){
+        return view('resources.create', compact('project'));
+      }
+
+      public function storeResource(Project $project, Request $request){
+
+
+          $resource = new Resource();
+
+          $resource->firstname = $request->firstname;
+          $resource->lastname = $request->lastname;
+          $resource->email = $request->email;
+          $resource->role = $request->role;
+          $resource->cost_initial = $request->cost_initial;
+          $resource->cost_per_hour = $request->cost_per_hour;
+          $resource->project_id = $project->id;
+
+          $resource->save();
+
+          return redirect('/project'.'/'.$project->id)->with('status', 'Nouvelle ressource ajoutée !');
+
+          //dd($request);
+
     }
 }
