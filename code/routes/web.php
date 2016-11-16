@@ -39,23 +39,31 @@ Route::get('getusers', function()
 /**********************PROJECTS-WEB***********************/
 Route::get('/project/create', 'ProjectsController@create');
 Route::get('/project/{project}', 'ProjectsController@index');
+
 Route::get('project/{project}/finance', 'ProjectsController@finance');
 Route::get('project/{project}/planification', 'ProjectsController@planification');
 Route::get('project/{project}/statistics', 'ProjectsController@statistics');
+
 
 Route::post('/project/create', 'ProjectsController@store');
 Route::delete('/project/{project}/delete', 'ProjectsController@delete');
 
 /**********************COLLABORATERS***********************/
 Route::get('/project/{project}/collaborater/create', 'ProjectsController@createCollaborater');
+
+
+Route::get('/collaborater/{id?}', 'CollaboratersController@get');
 Route::post('/project/{project}/collaborater/create', 'ProjectsController@storeCollaborater');
+
 Route::resource('collaborater', 'CollaboratersController', ['only' => [
   'show', 'store', 'update', 'destroy'
   ]]);
 
+
 /**********************RESOURCES***********************/
 Route::get('/project/{project}/resource/create', 'ProjectsController@createResource');
 Route::post('/project/{project}/resource/create', 'ProjectsController@storeResource');
+
 Route::resource('resource', 'ResourcesController', ['only' => [
   'show', 'store', 'update', 'destroy'
   ]]);
@@ -66,5 +74,6 @@ Route::post('/project/{project}/cost/create', 'ProjectsController@storeCost');
 Route::resource('cost', 'CostsController', ['only' => [
   'show', 'store', 'update', 'destroy'
   ]]);
+
 
 Route::get('/home', 'HomeController@index');

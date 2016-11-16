@@ -55,6 +55,7 @@ class ResourcesController extends Controller
     return Response::json($resource);
   }
 
+
   public function show($id)
   {
     $resource = Resource::find($id);

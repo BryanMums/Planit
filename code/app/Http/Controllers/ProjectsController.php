@@ -68,16 +68,19 @@ class ProjectsController extends Controller
       return view('projects.statistics', compact('project'));
     }
 
+
     /*************METHODS COLLABORATER********************/
     public function createCollaborater(Project $project){
       return view('collaboraters.create', compact('project'));
     }
 
     public function storeCollaborater(Project $project, Request $request){
+
         $col = new CollaboratersController;
         $col->store($request);
 
         return redirect('/project'.'/'.$project->id)->with('status', 'Nouveau collaborateur ajouté !');
+
     }
       /*************METHODS RESOURCES********************/
     public function createResource(Project $project){
@@ -99,5 +102,7 @@ class ProjectsController extends Controller
       $cos = new CostsController;
       $cos->store($request);
       return redirect('/project'.'/'.$project->id.'/finance')->with('status', 'Nouveau coût ajouté !');
+
     }
+
 }

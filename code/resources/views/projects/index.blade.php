@@ -270,7 +270,6 @@ $('.open-modal-collaborater').click(function(){
             var type = "PUT"; //for updating existing resource
             var my_url = '/collaborater/' + collaborater_id;
 
-
             $.ajax({
 
                 type: type,
