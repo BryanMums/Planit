@@ -21,8 +21,8 @@
     <div class="row">
       <div class="col-md-6 col-md-offset-3">
         <ul class="list-group">
-          @foreach ($user->projects as $project)
-            <li class="list-group-item"><a href="/project/{{$project->id}}" >{{$project->name}}</a></li>
+          @foreach ($user->projects as $pro)
+            <li class="list-group-item"><a href="/project/{{$pro->id}}" >{{$pro->name}}</a></li>
           @endforeach
         </ul>
       </div>

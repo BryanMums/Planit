@@ -16,4 +16,14 @@ class Project extends Model
     {
       return $this->hasMany(Collaborater::class);
     }
+
+    public function resources()
+    {
+      return $this->hasMany(Resource::class);
+    }
+
+    public function costs()
+    {
+      return $this->hasMany(Cost::class);
+    }
 }

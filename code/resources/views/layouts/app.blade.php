@@ -40,18 +40,32 @@
                         <span class="icon-bar"></span>
                     </button>
 
+                    @if (isset($project->id) AND $project->id != null)
+                    <a class="navbar-brand" href="#">
+                        {{ $project->name }}
+                    </a>
+                    @else
                     <!-- Branding Image -->
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
+                        {{ config('app.name', 'Planit') }}
                     </a>
+                    @endif
+
                 </div>
 
                 <div class="collapse navbar-collapse" id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
                       @if (!Auth::guest())
-                        <li><a href="\home">Home</a></li>
+                        <li><a href="\home">Projets</a></li>
                       @endif
+                      @if (isset($project->id) AND $project->id != null)
+                          <li><a href="\project\{{$project->id}}">Accueil</a></li>
+                          <li><a href="\project\{{$project->id}}\finance">Finance</a></li>
+                          <li><a href="\project\{{$project->id}}\planification">Planification</a></li>
+                          <li><a href="\project\{{$project->id}}\statistics">Statistiques</a></li>
+                      @endif
+
                     </ul>
 
                     <!-- Right Side Of Navbar -->

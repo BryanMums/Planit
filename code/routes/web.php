@@ -11,6 +11,7 @@
 |
 */
 use App\Collaborater;
+use App\Resource;
 
 Route::get('/', function () {
     return view('welcome');
@@ -34,17 +35,36 @@ Route::get('getusers', function()
     }
     return Response::json($return_array);
 });
-Route::get('/project/create', 'ProjectsController@create'); //Création d'un nouveau projet
-Route::get('/project/{project}', 'ProjectsController@index'); //Liste des projets de l'utilisateur
 
-Route::post('/project/create', 'ProjectsController@store'); //Store
+/**********************PROJECTS-WEB***********************/
+Route::get('/project/create', 'ProjectsController@create');
+Route::get('/project/{project}', 'ProjectsController@index');
+Route::get('project/{project}/finance', 'ProjectsController@finance');
+Route::get('project/{project}/planification', 'ProjectsController@planification');
+Route::get('project/{project}/statistics', 'ProjectsController@statistics');
+
+Route::post('/project/create', 'ProjectsController@store');
 Route::delete('/project/{project}/delete', 'ProjectsController@delete');
 
+/**********************COLLABORATERS***********************/
 Route::get('/project/{project}/collaborater/create', 'ProjectsController@createCollaborater');
 Route::post('/project/{project}/collaborater/create', 'ProjectsController@storeCollaborater');
-Route::delete('/collaborater/{collaborater_id?}',function($collaborater_id){
-    $collaborater = Collaborater::destroy($collaborater_id);
+Route::resource('collaborater', 'CollaboratersController', ['only' => [
+  'show', 'store', 'update', 'destroy'
+  ]]);
 
-    return Response::json($collaborater);
-});
+/**********************RESOURCES***********************/
+Route::get('/project/{project}/resource/create', 'ProjectsController@createResource');
+Route::post('/project/{project}/resource/create', 'ProjectsController@storeResource');
+Route::resource('resource', 'ResourcesController', ['only' => [
+  'show', 'store', 'update', 'destroy'
+  ]]);
+
+/*******************COSTS**************************/
+Route::get('/project/{project}/cost/create', 'ProjectsController@createCost');
+Route::post('/project/{project}/cost/create', 'ProjectsController@storeCost');
+Route::resource('cost', 'CostsController', ['only' => [
+  'show', 'store', 'update', 'destroy'
+  ]]);
+
 Route::get('/home', 'HomeController@index');
