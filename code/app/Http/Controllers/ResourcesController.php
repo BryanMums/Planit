@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Resource;
+use App\Project;
 use Response;
 
 class ResourcesController extends Controller
@@ -16,20 +17,14 @@ class ResourcesController extends Controller
    */
   public function store(Request $request)
   {
-    $resource = new Resource();
-
-    $resource->firstname = $request->firstname;
-    $resource->lastname = $request->lastname;
-    $resource->email = $request->email;
-    $resource->role = $request->role;
-    $resource->cost_initial = $request->cost_initial;
-    $resource->cost_per_hour = $request->cost_per_hour;
-    $resource->project_id = $request->project_id;
-
-    $resource->save();
-
-    return Response::json($resource);
-  }
+    $project = Project::findOrFail($request->project_id);
+    if($project->modify_resources()){
+      $resource = $project->resources()->create($request->only('firstname', 'lastname', 'email',
+                                                              'role', 'cost_initial', 'cost_per_hour'));
+      return Response::json($resource);
+    }
+    return false;
+}
 
 
   /**
@@ -41,26 +36,25 @@ class ResourcesController extends Controller
    */
   public function update(Request $request, $id)
   {
-    $resource = Resource::find($id);
-
-    $resource->firstname = $request->firstname;
-    $resource->lastname = $request->lastname;
-    $resource->email = $request->email;
-    $resource->role = $request->role;
-    $resource->cost_initial = $request->cost_initial;
-    $resource->cost_per_hour = $request->cost_per_hour;
-
-    $resource->save();
-
-    return Response::json($resource);
-  }
+    $resource = Resource::findOrFail($id);
+    $project = Project::findOrFail($resource->project_id);
+    if($project->modify_resources()){
+      $resource->update($request->only('firstname', 'lastname', 'email',
+                                      'role', 'cost_initial', 'cost_per_hour'));
+      return Response::json($resource);
+    }
+    return false;
+}
 
 
   public function show($id)
   {
-    $resource = Resource::find($id);
-
-    return Response::json($resource);
+    $resource = Resource::findOrFail($id);
+    $project = Project::findOrFail($resource->project_id);
+    if($project->see_resources()){
+        return Response::json($resource);
+    }
+    return false;
   }
 
   /**
@@ -71,8 +65,13 @@ class ResourcesController extends Controller
    */
   public function destroy($id)
   {
-    $resource = Resource::destroy($id);
+    $resource = Resource::findOrFail($id);
+    $project = Project::findOrFail($resource->project_id);
+    if($project->modify_resources()){
+      $resource = Resource::destroy($id);
 
-    return Response::json($resource);
+      return Response::json($resource);
+    }
+    return false;
   }
 }

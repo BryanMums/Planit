@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Collaborater;
+use App\Project;
 use Response;
+use Illuminate\Support\Facades\Auth;
 
 class CollaboratersController extends Controller
 {
@@ -18,17 +20,13 @@ class CollaboratersController extends Controller
      */
     public function store(Request $request)
     {
-      $collaborater = new Collaborater();
-
-      $collaborater->user_id = $request->id_user;
-      $collaborater->project_id = $request->project_id;
-      $collaborater->informations_rights = $request->inforadio;
-      $collaborater->gantt_rights = $request->ganttradio;
-      $collaborater->budget_rights = $request->budgetradio;
-
-      $collaborater->save();
-
-      return Response::json($collaborater);
+      $project = Project::findOrFail($request->project_id);
+      if($project->modify_collaboraters()){
+        $collaborater = $project->collaboraters()->create($request->only('user_id', 'informations_rights', 'collaboraters_rights',
+                                                        'resources_rights', 'gantt_rights', 'budget_rights'));
+        return Response::json($collaborater);
+      }
+      return false;
     }
 
 
@@ -41,22 +39,23 @@ class CollaboratersController extends Controller
      */
     public function update(Request $request, $id)
     {
-      $collaborater = Collaborater::find($id);
-
-      $collaborater->informations_rights = $request->informations_rights;
-      $collaborater->gantt_rights = $request->gantt_rights;
-      $collaborater->budget_rights = $request->budget_rights;
-
-      $collaborater->save();
-
-      return Response::json($collaborater);
+      $collaborater = Collaborater::findOrFail($id);
+      $project = Project::findOrFail($collaborater->project_id);
+      if($project->modify_collaboraters()){
+        $collaborater->update($request->only('informations_rights', 'collaboraters_rights',
+                                            'resources_rights', 'gantt_rights', 'budget_rights'));
+        return Response::json($collaborater);
+      }
+      return false;
     }
 
     public function show($id)
     {
-      $collaborater = Collaborater::find($id);
+      $collaborater = Collaborater::findOrFail($id);
 
-      return Response::json($collaborater);
+      $project = Project::findOrFail($collaborater->project_id);
+      if($project->see_collaboraters()) return Response::json($collaborater);
+      return false;
     }
 
     /**
@@ -67,8 +66,13 @@ class CollaboratersController extends Controller
      */
     public function destroy($id)
     {
-      $collaborater = Collaborater::destroy($id);
+      $collaborater = Collaborater::findOrFail($id);
+      $project = Project::findOrFail($collaborater->project_id);
+      if($project->modify_collaboraters() || $collaborater->user_id == Auth::id()){
+        $collaborater = Collaborater::destroy($id);
 
-      return Response::json($collaborater);
+        return Response::json($collaborater);
+      }
+      return false;
     }
 }

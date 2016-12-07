@@ -15,4 +15,7 @@ class Collaborater extends Model
     {
       return $this->belongsTo(Project::class);
     }
+    protected $fillable = ['user_id', 'informations_rights',
+                            'collaboraters_rights', 'resources_rights', 'gantt_rights',
+                            'budget_rights'];
 }

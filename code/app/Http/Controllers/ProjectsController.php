@@ -17,11 +17,17 @@ class ProjectsController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-    }
+		//$this->middleware('rights', ['index' => ['is_admin', 'is_collaborator']]);
+	}
 
     public function index(Project $project)
     {
-      return view('projects.index', compact('project'));
+        if($project->is_admin() || $project->is_collaborater())
+        {
+            return view('projects.index', compact('project'));
+        }else{
+            return view('projects.error');
+        }
     }
 
     public function create()
@@ -31,36 +37,34 @@ class ProjectsController extends Controller
 
     public function store(Request $request)
     {
-      $project = new Project();
-
-      $project->name = $request->name;
-      $project->description = $request->description;
-      $project->budget = $request->budget;
-      $project->date_begin = $request->date_begin;
-      $project->date_end = $request->date_end;
-      $project->client_name = $request->client_name;
-      $project->client_mail = $request->client_mail;
-      $project->client_tel = $request->client_tel;
-      $project->user_id = Auth::id();
-
-      $project->save();
-
+      Auth::user()->projects()->create($request->only('name', 'description', 'budget',
+                                                  'date_begin', 'date_end', 'client_name',
+                                                  'client_mail', 'client_tel'));
       return redirect('/home')->with('status', 'Projet créé !');
     }
 
     public function delete(Project $project)
     {
-      return "delete";
+      if($project->is_admin()){
+        //delete
+      }
+      return view('projects.error');
     }
 
     public function finance(Project $project)
     {
-      return view('projects.finance', compact('project'));
+      if($project->see_finance()){
+        return view('projects.finance', compact('project'));
+      }
+        return view('projects.error', compact('project'));
     }
 
     public function planification(Project $project)
     {
-      return view('projects.planification', compact('project'));
+      if($project->see_gantt()){
+          return view('projects.planification', compact('project'));
+      }
+      return view('projects.error', compact('project'));
     }
 
     public function statistics(Project $project)
@@ -71,38 +75,54 @@ class ProjectsController extends Controller
 
     /*************METHODS COLLABORATER********************/
     public function createCollaborater(Project $project){
-      return view('collaboraters.create', compact('project'));
+      if($project->modify_collaboraters()){
+        return view('collaboraters.create', compact('project'));
+      }
+      return view('projects.error');
     }
 
     public function storeCollaborater(Project $project, Request $request){
+        if($project->modify_collaboraters()){
+          $col = new CollaboratersController;
+          $col->store($request);
 
-        $col = new CollaboratersController;
-        $col->store($request);
-
-        return redirect('/project'.'/'.$project->id)->with('status', 'Nouveau collaborateur ajouté !');
-
+          return redirect('/project'.'/'.$project->id)->with('status', 'Nouveau collaborateur ajouté !');
+        }
+        return view('projects.error');
     }
       /*************METHODS RESOURCES********************/
     public function createResource(Project $project){
-      return view('resources.create', compact('project'));
+      if($project->modify_resources()){
+          return view('resources.create', compact('project'));
+      }
+      return view('projects.error');
     }
 
     public function storeResource(Project $project, Request $request){
+      if($project->modify_resources()){
         $res = new ResourcesController;
         $res->store($request);
+		// route('project.show', $project->id)
         return redirect('/project'.'/'.$project->id)->with('status', 'Nouvelle ressource ajoutée !');
+      }
+      return view('projects.error');
     }
 
     /*********METHODS COSTS**************/
     public function createCost(Project $project){
-      return view('costs.create', compact('project'));
+      if($project->modify_finance()){
+          return view('costs.create', compact('project'));
+      }
+      return view('projects.error');
     }
 
     public function storeCost(Project $project, Request $request){
-      $cos = new CostsController;
-      $cos->store($request);
-      return redirect('/project'.'/'.$project->id.'/finance')->with('status', 'Nouveau coût ajouté !');
-
+      if($project->modify_finance()){
+        $cos = new CostsController;
+        $cos->store($request);
+        return redirect('/project'.'/'.$project->id.'/finance')->with('status', 'Nouveau coût ajouté !');
+      }
+      return view('projects.error');
     }
 
 }

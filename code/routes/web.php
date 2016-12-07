@@ -52,7 +52,6 @@ Route::delete('/project/{project}/delete', 'ProjectsController@delete');
 Route::get('/project/{project}/collaborater/create', 'ProjectsController@createCollaborater');
 
 
-Route::get('/collaborater/{id?}', 'CollaboratersController@get');
 Route::post('/project/{project}/collaborater/create', 'ProjectsController@storeCollaborater');
 
 Route::resource('collaborater', 'CollaboratersController', ['only' => [
@@ -74,6 +73,5 @@ Route::post('/project/{project}/cost/create', 'ProjectsController@storeCost');
 Route::resource('cost', 'CostsController', ['only' => [
   'show', 'store', 'update', 'destroy'
   ]]);
-
 
 Route::get('/home', 'HomeController@index');

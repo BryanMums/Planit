@@ -13,49 +13,80 @@
             <div class="form-group">
               <label for="name">Email du collaborateur</label>
               <input id="user_search" type="text" name="user_search" class="form-control"/ >
-              <input id="id_user" type="hidden" name="id_user" value=""/>
+              <input id="id_user" type="hidden" name="user_id" value=""/>
             </div>
             <h3>Droits</h3>
             <div class="form-group">
+              <div class="row">
               <div class="col-md-4">
                 <label>Informations de base</label>
                 <div class="radio">
-                  <label><input type="radio" name="inforadio" value=0>Aucun droit</label>
+                  <label><input type="radio" name="informations_rights" value=0>Aucun droit</label>
                 </div>
                 <div class="radio">
-                  <label><input type="radio" name="inforadio" value=1>Lecture</label>
+                  <label><input type="radio" name="informations_rights" value=1>Lecture</label>
                 </div>
                 <div class="radio">
-                  <label><input type="radio" name="inforadio" value=2>Modification</label>
+                  <label><input type="radio" name="informations_rights" value=2>Modification</label>
                 </div>
               </div>
 
               <div class="col-md-4">
+                <label>Collaborateurs</label>
+                <div class="radio">
+                  <label><input type="radio" name="collaboraters_rights" value=0>Aucun droit</label>
+                </div>
+                <div class="radio">
+                  <label><input type="radio" name="collaboraters_rights" value=1>Lecture</label>
+                </div>
+                <div class="radio">
+                  <label><input type="radio" name="collaboraters_rights" value=2>Modification</label>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <label>Ressources</label>
+                <div class="radio">
+                  <label><input type="radio" name="resources_rights" value=0>Aucun droit</label>
+                </div>
+                <div class="radio">
+                  <label><input type="radio" name="resources_rights" value=1>Lecture</label>
+                </div>
+                <div class="radio">
+                  <label><input type="radio" name="resources_rights" value=2>Modification</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4">
                 <label>Gantt</label>
                 <div class="radio">
-                  <label><input type="radio" name="ganttradio" value=0>Aucun droit</label>
+                  <label><input type="radio" name="gantt_rights" value=0>Aucun droit</label>
                 </div>
                 <div class="radio">
-                  <label><input type="radio" name="ganttradio" value=1>Lecture</label>
+                  <label><input type="radio" name="gantt_rights" value=1>Lecture</label>
                 </div>
                 <div class="radio">
-                  <label><input type="radio" name="ganttradio" value=2>Modification</label>
+                  <label><input type="radio" name="gantt_rights" value=2>Modification</label>
                 </div>
               </div>
 
               <div class="col-md-4">
                 <label>Budget</label>
                 <div class="radio">
-                  <label><input type="radio" name="budgetradio" value=0>Aucun droit</label>
+                  <label><input type="radio" name="budget_rights" value=0>Aucun droit</label>
                 </div>
                 <div class="radio">
-                  <label><input type="radio" name="budgetradio" value=1>Lecture</label>
+                  <label><input type="radio" name="budget_rights" value=1>Lecture</label>
                 </div>
                 <div class="radio">
-                  <label><input type="radio" name="budgetradio" value=2>Modification</label>
+                  <label><input type="radio" name="budget_rights" value=2>Modification</label>
                 </div>
               </div>
+
             </div>
+          </div>
 
             <div class="form-group">
               <button type="submit" class="btn btn-primary">Créer</button>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Cost;
+use App\Project;
 use Response;
 
 class CostsController extends Controller
@@ -18,17 +19,12 @@ class CostsController extends Controller
      */
     public function store(Request $request)
     {
-        $cost = new Cost();
-
-        $cost->name = $request->name;
-        $cost->description = $request->description;
-        $cost->value = $request->value;
-        $cost->project_id = $request->project_id;
-
-        $cost->save();
-
-        return Response::json($cost);
-
+        $project = Project::findOrFail($request->project_id);
+        if($project->modify_finance()){
+          $cost = $project->costs()->create($request->only('name', 'description', 'value'));
+          return Response::json($cost);
+        }
+        return Reponse::json();
     }
 
     /**
@@ -39,9 +35,10 @@ class CostsController extends Controller
      */
     public function show($id)
     {
-        $cost = Cost::find($id);
-
-        return Response::json($cost);
+        $cost = Cost::findOrFail($id);
+        $project = Project::findOrFail($cost->project_id);
+        if($project->see_finance()) return Response::json($cost);
+        return false;
     }
 
 
@@ -54,14 +51,15 @@ class CostsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $cost = Cost::find($id);
-        $cost->name = $request->name;
-        $cost->description = $request->description;
-        $cost->value = $request->value;
+        $cost = Cost::findOrFail($id);
+        $project = Project::findOrFail($cost->project_id);
 
-        $cost->save();
+        if($project->modify_finance()){
+          $cost->update($request->only('name', 'description', 'value'));
 
-        return Response::json($cost);
+          return Response::json($cost);
+        }
+        return false;
     }
 
     /**
@@ -72,8 +70,12 @@ class CostsController extends Controller
      */
     public function destroy($id)
     {
-        $cost = Cost::destroy($id);
-
-        return Response::json($cost);
+        $cost = Cost::findOrFail($id);
+        $project = Project::findOrFail($cost->project_id);
+        if($project->modify_resources()){
+          $cost = Cost::destroy($id);
+          return Response::json($cost);
+        }
+        return false;
     }
 }

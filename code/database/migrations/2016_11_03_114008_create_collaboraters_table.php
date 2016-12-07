@@ -18,6 +18,8 @@ class CreateCollaboratersTable extends Migration
             $table->integer('user_id')->unsigned()->index();
             $table->integer('project_id')->unsigned()->index();
             $table->integer('informations_rights');
+            $table->integer('collaboraters_rights');
+            $table->integer('resources_rights');
             $table->integer('gantt_rights');
             $table->integer('budget_rights');
             $table->timestamps();

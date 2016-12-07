@@ -57,14 +57,15 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
                       @if (!Auth::guest())
-                        <li><a href="\home">Projets</a></li>
                       @endif
                       @if (isset($project->id) AND $project->id != null)
                           <li><a href="\project\{{$project->id}}">Accueil</a></li>
                           <li><a href="\project\{{$project->id}}\finance">Finance</a></li>
                           <li><a href="\project\{{$project->id}}\planification">Planification</a></li>
                           <li><a href="\project\{{$project->id}}\statistics">Statistiques</a></li>
+                          <li><a href="#">|</a></li>
                       @endif
+                      <li><a href="\home">Liste des Projets</a></li>
 
                     </ul>
 

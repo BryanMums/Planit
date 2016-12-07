@@ -8,6 +8,7 @@
         <h2><b>{{ $project->name }}</b> | Accueil </h2>
         <hr/>
         <!-- Colonne de gauche -->
+        @if ($project->see_informations())
         <div class="col-md-6">
           <h2>Informations</h2>
             <h4>Description</h4>
@@ -28,8 +29,10 @@
             <h4>Infos du client</h4>
             <p><a href="{{ $project->client_mail }}" >{{ $project->client_name }}</a> | {{ $project->client_tel }}</p>
         </div>
+        @endif
         <!-- Colonne de droite -->
         <div class="col-md-6">
+          @if($project->see_collaboraters())
           <h2>Collaborateurs</h2>
           <table class="table">
             <tr>
@@ -40,15 +43,21 @@
               <tr id="collaborater{{$collaborater->id}}">
                 <td>{{$collaborater->user->name}}</td>
                 <td>
-                  <button class="btn btn-warning btn-xs btn-detail open-modal-collaborater" value="{{$collaborater->id}}">Modifier</button>
+                  <button class="btn btn-warning btn-xs btn-detail open-modal-collaborater" value="{{$collaborater->id}}">Voir/Modifier</button>
+                  @if ($project->modify_collaboraters())
                   <button class="btn btn-xs btn-danger btn-delete delete-collaborater" value="{{$collaborater->id}}">Supprimer</button>
+                  @endif
                 </td>
               </tr>
             @endforeach
 
           </table>
+          @if ($project->is_admin())
           <a href="/project/{{ $project->id }}/collaborater/create" class="btn btn-success">Ajouter un nouveau collaborateur</a>
+          @endif
+        @endif
           <!-- BEGIN : Ressources -->
+          @if($project->see_resources())
           <h2>Ressources</h2>
           <table class="table">
             <tr>
@@ -61,14 +70,19 @@
               <td id="resource{{$resource->id}}Firstname">{{$resource->firstname}}</td>
               <td id="resource{{$resource->id}}Role">{{$resource->role}}</td>
               <td>
-                <button class="btn btn-warning btn-xs btn-detail open-modal-resource" value="{{$resource->id}}">Modifier</button>
+                <button class="btn btn-warning btn-xs btn-detail open-modal-resource" value="{{$resource->id}}">Voir/Modifier</button>
+                @if ($project->modify_resources())
                 <button class="btn btn-xs btn-danger btn-delete delete-resource" value="{{$resource->id}}">Supprimer</button>
+                @endif
               </td>
             </tr>
           @endforeach
           </table>
+          @if($project->modify_resources())
           <a href="/project/{{ $project->id }}/resource/create" class="btn btn-success">Ajouter une nouvelle ressource</a>
+          @endif
           <!-- END : Ressources -->
+        @endif
         </div>
     </div>
 </div>
@@ -76,6 +90,7 @@
 
 
 
+@if($project->see_collaboraters())
 <!--******************************MODALS EDIT COLLABORATER*****************************-->
 <div class="modal fade" id="collaboraterModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -98,6 +113,32 @@
                       </div>
                       <div class="radio">
                         <label><input id="info2" type="radio" name="inforadio" value=2>Modification</label>
+                      </div>
+                    </div>
+
+                    <div class="col-md-4">
+                      <label>Collaborateurs</label>
+                      <div class="radio">
+                        <label><input type="radio" name="collaboradio" value=0>Aucun droit</label>
+                      </div>
+                      <div class="radio">
+                        <label><input type="radio" name="collaboradio" value=1>Lecture</label>
+                      </div>
+                      <div class="radio">
+                        <label><input type="radio" name="collaboradio" value=2>Modification</label>
+                      </div>
+                    </div>
+
+                    <div class="col-md-4">
+                      <label>Ressources</label>
+                      <div class="radio">
+                        <label><input type="radio" name="resoradio" value=0>Aucun droit</label>
+                      </div>
+                      <div class="radio">
+                        <label><input type="radio" name="resoradio" value=1>Lecture</label>
+                      </div>
+                      <div class="radio">
+                        <label><input type="radio" name="resoradio" value=2>Modification</label>
                       </div>
                     </div>
 
@@ -130,13 +171,17 @@
                 </form>
             </div>
             <div class="modal-footer">
+                @if($project->modify_collaboraters())
                 <button type="button" class="btn btn-primary" id="btn-save-collaborater" value="add">Save changes</button>
+                @endif
                 <input type="hidden" id="modalCollaborater_id" name="collaborater_id" value="0">
             </div>
         </div>
     </div>
 </div>
+@endif
 
+@if($project->see_resources())
 <!--******************************MODALS EDIT RESOURCE*****************************-->
 <div class="modal fade" id="resourceModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -187,13 +232,15 @@
               </div>
             </div>
             <div class="modal-footer">
+                @if($project->modify_resources())
                 <button type="button" class="btn btn-primary" id="btn-save-resource" value="add">Save changes</button>
+                @endif
                 <input type="hidden" id="modalResource_id" name="resource_id" value="0">
             </div>
         </div>
     </div>
 </div>
-
+@endif
 <!--******************************SCRIPT AJAX*****************************-->
 <script>
 $(document).ready(function(){
@@ -204,7 +251,7 @@ $(document).ready(function(){
         'X-CSRF-Token': $('input[name="_token"]').val()
     }
 });
-
+@if($project->see_collaboraters())
 $('.open-modal-collaborater').click(function(){
         var collaborater_id = $(this).val();
 
@@ -213,6 +260,14 @@ $('.open-modal-collaborater').click(function(){
             var $radios = $('input:radio[name=inforadio]');
             if($radios.is(':checked') === false) {
                 $radios.filter('[value='+data.informations_rights+']').prop('checked', true);
+            }
+            $radios = $('input:radio[name=collaboradio]');
+            if($radios.is(':checked') === false) {
+                $radios.filter('[value='+data.collaboraters_rights+']').prop('checked', true);
+            }
+            $radios = $('input:radio[name=resoradio]');
+            if($radios.is(':checked') === false) {
+                $radios.filter('[value='+data.resources_rights+']').prop('checked', true);
             }
             $radios = $('input:radio[name=budgetradio]');
             if($radios.is(':checked') === false) {
@@ -226,29 +281,10 @@ $('.open-modal-collaborater').click(function(){
             $('#collaboraterModal').modal('show');
         })
     });
-//delete task and remove it from list
-    $('.delete-collaborater').click(function(){
-      if(confirm("Voulez-vous vraiment supprimer ce collaborateur ?")){
-        var collaborater_id = $(this).val();
-
-        $.ajax({
-            type: "DELETE",
-            url: '/collaborater/' + collaborater_id,
-            success: function (data) {
-                console.log(data);
-
-                $("#collaborater" + collaborater_id).remove();
-            },
-            error: function (data) {
-                console.log('Error:', data);
-            }
-        });
-      }
-    });
+    @endif
 
 
-
-        //create new task / update existing task
+        @if($project->modify_collaboraters())
         $("#btn-save-collaborater").click(function (e) {
             $.ajaxSetup({
                 headers: {
@@ -260,6 +296,8 @@ $('.open-modal-collaborater').click(function(){
 
             var formData = {
                 informations_rights: $('input[name=inforadio]:checked').val(),
+                collaboraters_rights: $('input[name=collaboradio]:checked').val(),
+                resources_rights: $('input[name=resoradio]:checked').val(),
                 gantt_rights: $('input[name=ganttradio]:checked').val(),
                 budget_rights: $('input[name=budgetradio]:checked').val(),
             }
@@ -288,7 +326,27 @@ $('.open-modal-collaborater').click(function(){
             });
         });
 
+        $('.delete-collaborater').click(function(){
+          if(confirm("Voulez-vous vraiment supprimer ce collaborateur ?")){
+            var collaborater_id = $(this).val();
 
+            $.ajax({
+                type: "DELETE",
+                url: '/collaborater/' + collaborater_id,
+                success: function (data) {
+                    console.log(data);
+
+                    $("#collaborater" + collaborater_id).remove();
+                },
+                error: function (data) {
+                    console.log('Error:', data);
+                }
+            });
+          }
+        });
+        @endif
+
+    @if($project->see_resources())
     $('.open-modal-resource').click(function(){
             var resource_id = $(this).val();
 
@@ -304,7 +362,9 @@ $('.open-modal-collaborater').click(function(){
                 $('#resourceModal').modal('show');
             })
         });
+        @endif
 
+        @if($project->modify_resources())
         $("#btn-save-resource").click(function (e) {
             $.ajaxSetup({
                 headers: {
@@ -351,6 +411,8 @@ $('.open-modal-collaborater').click(function(){
             });
         });
 
+
+
     $('.delete-resource').click(function(){
       if(confirm("Voulez-vous vraiment supprimer cette ressource ?")){
         var resource_id = $(this).val();
@@ -368,6 +430,7 @@ $('.open-modal-collaborater').click(function(){
         });
       }
     });
+    @endif
   });
 </script>
 @endsection

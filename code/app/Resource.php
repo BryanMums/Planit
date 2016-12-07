@@ -11,4 +11,7 @@ class Resource extends Model
     {
       return $this->belongsTo(Project::class);
     }
+
+    protected $fillable = ['firstname', 'lastname', 'email', 'role',
+                          'cost_initial', 'cost_per_hour'];
 }

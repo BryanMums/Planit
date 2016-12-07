@@ -10,5 +10,5 @@ class Cost extends Model
   {
     return $this->belongsTo(Project::class);
   }
-
+  protected $fillable = ['name', 'description', 'value'];
 }
