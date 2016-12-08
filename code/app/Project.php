@@ -32,6 +32,10 @@ class Project extends Model
       return $this->hasMany(Cost::class);
     }
 
+    public function gantttasks(){
+      return $this->hasMany(GanttTask::class);
+    }
+
     public function is_admin()
     {
         if(Auth::id() != $this->user_id){
