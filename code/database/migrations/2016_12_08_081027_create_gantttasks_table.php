@@ -13,7 +13,7 @@ class CreateGantttasksTable extends Migration
      */
     public function up()
     {
-        Schema::create('GanttTaks', function (Blueprint $table) {
+        Schema::create('GanttTasks', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('parent_id')->nullable();
             $table->integer('order_id')->nullable();
@@ -37,6 +37,6 @@ class CreateGantttasksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('GanttTaks');
+        Schema::dropIfExists('GanttTasks');
     }
 }

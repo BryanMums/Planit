@@ -62,6 +62,7 @@ Route::resource('collaborater', 'CollaboratersController', ['only' => [
 /**********************RESOURCES***********************/
 Route::get('/project/{project}/resource/create', 'ProjectsController@createResource');
 Route::post('/project/{project}/resource/create', 'ProjectsController@storeResource');
+Route::get('/project/{id}/resources', 'ProjectsController@getResources');
 
 Route::resource('resource', 'ResourcesController', ['only' => [
   'show', 'store', 'update', 'destroy'
@@ -73,5 +74,14 @@ Route::post('/project/{project}/cost/create', 'ProjectsController@storeCost');
 Route::resource('cost', 'CostsController', ['only' => [
   'show', 'store', 'update', 'destroy'
   ]]);
+
+/*****************TASKS**************************/
+Route::get('/project/{id}/tasks', 'ProjectsController@getTasks');
+Route::put('/project/{project}/gantttask/{task}', 'ProjectsController@updateGantttask');
+Route::post('/project/{project}/gantttask', 'ProjectsController@createGantttask');
+Route::resource('gantttask', 'GanttTasksController', ['only' => [
+  'show', 'store', 'update', 'destroy'
+  ]]);
+
 
 Route::get('/home', 'HomeController@index');

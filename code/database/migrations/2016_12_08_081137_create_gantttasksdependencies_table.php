@@ -13,10 +13,10 @@ class CreateGantttasksdependenciesTable extends Migration
      */
     public function up()
     {
-        Schema::create('GanttTaksDependencies', function (Blueprint $table) {
+        Schema::create('GanttTasksDependencies', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('gantt_task_id');
             $table->integer('predecessor_id');
-            $table->integer('successor_id');
             $table->integer('type')->nullable();
         });
     }
@@ -28,6 +28,6 @@ class CreateGantttasksdependenciesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('GanttTaksDependencies');
+        Schema::dropIfExists('GanttTasksDependencies');
     }
 }

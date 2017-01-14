@@ -1,0 +1,15 @@
+.card{
+  background:white;
+  width:100%;
+  text-align: center;
+}
+.card-content{
+  padding-top : 20px;
+  padding-bottom: 20px;
+}
+.card-title{
+  background: #2980b9;
+  color:white;
+  font-weight: bold;
+  font-size:17px;
+}
