@@ -9,12 +9,7 @@ use Response;
 
 class ResourcesController extends Controller
 {
-  /**
-   * Store a newly created resource in storage.
-   *
-   * @param  \Illuminate\Http\Request  $request
-   * @return \Illuminate\Http\Response
-   */
+  // Permet de stocker les ressources.
   public function store(Request $request)
   {
     $project = Project::findOrFail($request->project_id);
@@ -24,16 +19,10 @@ class ResourcesController extends Controller
       return Response::json($resource);
     }
     return false;
-}
+  }
 
 
-  /**
-   * Update the specified resource in storage.
-   *
-   * @param  \Illuminate\Http\Request  $request
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
+  // Permet de mettre à jour les ressources.
   public function update(Request $request, $id)
   {
     $resource = Resource::findOrFail($id);
@@ -46,7 +35,7 @@ class ResourcesController extends Controller
     return false;
 }
 
-
+  // Permet de récupérer les informations d'une ressource selon son id, retournées en JSON.
   public function show($id)
   {
     $resource = Resource::findOrFail($id);
@@ -57,12 +46,7 @@ class ResourcesController extends Controller
     return false;
   }
 
-  /**
-   * Remove the specified resource from storage.
-   *
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
+  // Permet de supprimer une ressource.
   public function destroy($id)
   {
     $resource = Resource::findOrFail($id);

@@ -25,6 +25,7 @@ class CreateGantttasksTable extends Migration
             $table->date('date_begin_real')->nullable();
             $table->integer('duration_real')->nullable();
             $table->integer('hours_real')->nullable();
+            $table->integer('percent_done')->unsigned()->default(0);
             $table->string('color', 10);
             $table->integer('project_id');
         });

@@ -19,24 +19,47 @@ class ProjectsController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-		//$this->middleware('rights', ['index' => ['is_admin', 'is_collaborator']]);
 	}
 
+    // Méthode appelée pour afficher la page d'accueil d'un projet.
     public function index(Project $project)
     {
         if($project->is_admin() || $project->is_collaborater())
         {
             return view('projects.index', compact('project'));
         }else{
-            return view('projects.error');
+            return view('projects.error', compact('project'));
         }
     }
 
+    // Permet de récupérer les informations d'un projet, en JSON.
+    public function ProjectJson(Project $project)
+    {
+      if($project->see_informations()) return Response::json($project);
+      return false;
+    }
+
+    // Permet d'afficher la page de création d'un projet.
     public function create()
     {
       return view('projects.create');
     }
 
+    // Permet de mettre à jour un projet.
+    public function update(Request $request, $id)
+    {
+        $project = Project::findOrFail($id);
+
+        if($project->modify_informations()){
+          $project->update($request->only('name', 'description', 'budget', 'date_begin', 'date_end',
+                                          ' client_name', 'client_tel', 'client_mail'));
+
+          return Response::json($project);
+        }
+        return false;
+    }
+
+    // Permet de stocker un projet.
     public function store(Request $request)
     {
       Auth::user()->projects()->create($request->only('name', 'description', 'budget',
@@ -45,14 +68,33 @@ class ProjectsController extends Controller
       return redirect('/home')->with('status', 'Projet créé !');
     }
 
-    public function delete(Project $project)
-    {
+    // Permet de supprimer un projet.
+    public function destroy($id){
+      $project = Project::findOrFail($id);
       if($project->is_admin()){
-        //delete
+        $project->resources()->delete();
+        $project->costs()->delete();
+        $project->gantttasks()->delete();
+        $project->collaboraters()->delete();
+        $project->destroy($project->id);
+        return Response::json($project);
       }
-      return view('projects.error');
+      return false;
     }
 
+    // Méthode appelée lorsqu'un collaborateur quitte un projet.
+    public function quitProject(Project $project){
+      if($project->is_collaborater()){
+        $collaborater = Collaborater::where('user_id', '=', Auth::id())->where('project_id', '=', $project->id)->delete();
+        if($collaborater){
+          return redirect('/home')->with('status', 'Vous avez bien quitté le projet !');
+        }
+        return view('projects.index', compact($project));
+      }
+      return view('projects.error', compact('project'));
+    }
+
+    // Méthode appelée pour afficher la page des coûts.
     public function finance(Project $project)
     {
       if($project->see_finance()){
@@ -61,6 +103,7 @@ class ProjectsController extends Controller
         return view('projects.error', compact('project'));
     }
 
+    // Méthode appelée pour afficher la page de la planification.
     public function planification(Project $project)
     {
       if($project->see_gantt()){
@@ -69,6 +112,7 @@ class ProjectsController extends Controller
       return view('projects.error', compact('project'));
     }
 
+    // Méthode appelée pour afficher la page des statistiques.
     public function statistics(Project $project)
     {
 
@@ -116,6 +160,7 @@ class ProjectsController extends Controller
 
 
     /*************METHODS COLLABORATER********************/
+    // Permet d'afficher la page de création d'un collaborateur.
     public function createCollaborater(Project $project){
       if($project->modify_collaboraters()){
         return view('collaboraters.create', compact('project'));
@@ -123,6 +168,7 @@ class ProjectsController extends Controller
       return view('projects.error');
     }
 
+    // Méthode appelée pour stocker un collaborateur puis rediriger sur la bonne page.
     public function storeCollaborater(Project $project, Request $request){
         if($project->modify_collaboraters()){
           $col = new CollaboratersController;
@@ -132,7 +178,9 @@ class ProjectsController extends Controller
         }
         return view('projects.error');
     }
-      /*************METHODS RESOURCES********************/
+
+    /*************METHODS RESOURCES********************/
+    // Permet d'afficher la page de création de ressources.s
     public function createResource(Project $project){
       if($project->modify_resources()){
           return view('resources.create', compact('project'));
@@ -140,27 +188,30 @@ class ProjectsController extends Controller
       return view('projects.error');
     }
 
+    // Méthode appelée pour stocker une ressource puis rediriger sur la bonne page.
     public function storeResource(Project $project, Request $request){
       if($project->modify_resources()){
         $res = new ResourcesController;
         $res->store($request);
-		// route('project.show', $project->id)
         return redirect('/project'.'/'.$project->id)->with('status', 'Nouvelle ressource ajoutée !');
       }
       return view('projects.error');
     }
 
+    // Permet de retourner sous le format JSON, la liste des ressources du projet.
     public function getResources($id){
           $resources = Resource::all()->where('project_id', $id);
           return Response::json($resources);
     }
 
+    // Permet de retourner sous le format JSON, la liste des tâches du projet.
     public function getTasks($id){
-        $tasks = GanttTask::all()->where('project_id', $id);
+        $tasks = GanttTask::with('resources', 'dependencies')->where('project_id', $id)->get();
         return Response::json($tasks);
     }
 
     /*********METHODS COSTS**************/
+    // Permet de retourner la page de création d'un coût.
     public function createCost(Project $project){
       if($project->modify_finance()){
           return view('costs.create', compact('project'));
@@ -168,6 +219,7 @@ class ProjectsController extends Controller
       return view('projects.error');
     }
 
+    // Méthode appelée pour stocker un coût puis rediriger sur la bonne page.
     public function storeCost(Project $project, Request $request){
       if($project->modify_finance()){
         $cos = new CostsController;
@@ -182,7 +234,6 @@ class ProjectsController extends Controller
       if($project->modify_gantt()){
         $tas = new GanttTasksController;
         return $tas->store($request);
-        //Penser après à mettre à jour partout
       }
     }
 

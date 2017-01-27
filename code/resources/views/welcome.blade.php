@@ -78,6 +78,7 @@
                     Planit
                 </div>
                 <h3>L'application parfaite pour planifier et gérer vos projets !</h3>
+                <img src="/img/logo-HEARC.jpg" width="25%"/>
             </div>
         </div>
     </body>

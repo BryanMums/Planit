@@ -1,18 +1,31 @@
 @extends('layouts.app')
 
 @section('content')
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
 <div class="container">
   <div class="row">
     <h2><b>{{ $project->name }}</b> | Statistiques </h2>
     <hr/>
     <div class="row">
       <div class="col-md-12">
-        <h3>Temps disponible</h3>
+        <h3>Avancement du projet dans le temps</h3>
         <div class="progress">
-          <div class="progress-bar" role="progressbar" aria-valuenow="{{$days[1]}}" aria-valuemin="0" aria-valuemax="{{$days[0]}}" style="width: {{($days[1]/$days[0])*100}}%;background:#2980b9;">
-            {{number_format(($days[1]/$days[0])*100, 0)}}%
-          </div>
+          @if ($days[0] != 0)
+            @if ($days[1] < 0)
+              <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;background:#2980b9;">
+                0%
+              </div>
+            @elseif($days[1] > $days[0])
+              <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;background:#2980b9;">
+                100%
+              </div>
+            @else
+              <div class="progress-bar" role="progressbar" aria-valuenow="{{$days[1]}}" aria-valuemin="0" aria-valuemax="{{$days[0]}}" style="width: {{($days[1]/$days[0])*100}}%;background:#2980b9;">
+                {{number_format(($days[1]/$days[0])*100, 0)}}%
+              </div>
+            @endif
+
+          @endif
         </div>
       </div>
       <div class="col-sm-4">

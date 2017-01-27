@@ -1,43 +1,72 @@
 @extends('layouts.app')
 
 @section('content')
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.min.js"></script>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   <script type="text/javascript">
+    var canModify = {{ $project->modify_gantt() }}
     google.charts.load('current', {'packages':['gantt']});
     google.charts.setOnLoadCallback(drawChart);
-
     function daysToMilliseconds(days) {
       return days * 24 * 60 * 60 * 1000;
     }
 
     function drawChart() {
-
       var data = new google.visualization.DataTable();
       data.addColumn('string', 'Task ID');
       data.addColumn('string', 'Task Name');
+      data.addColumn('string', 'Resource');
       data.addColumn('date', 'Start Date');
       data.addColumn('date', 'End Date');
       data.addColumn('number', 'Duration');
       data.addColumn('number', 'Percent Complete');
       data.addColumn('string', 'Dependencies');
 
-      @foreach ($project->gantttasks as $task)
-      var date = '{{$task->date_begin_plan}}';
-      var date_array = date.split("-");
-      data.addRow(['{{$task->id}}', '{{$task->title}}',
-       new Date(date_array[0], date_array[1]-1, date_array[2]), null, daysToMilliseconds('{{$task->duration_plan}}'),  100,  null]);
-      @endforeach
+      $('#listTasks').empty();
+      $('#listTasks').append('<tbody></tbody>');
+      $.get('/project' + '/' + {{$project->id}} + '/' + 'tasks', function (tasks) {
+        var heightTot = 50;
+        // Pour chaque tâche
+        $.each(tasks, function(i, task){
+          /************* Création des entrées pour le Gantt Chart ******************/
+          var resources = "";
+          // Pour chaque ressource de la tâche
+          $.each(task.resources, function(j, resource){
+            resources += resource.firstname+",";
+          });
+          resources = resources.replace(/,\s*$/, "");
+          var dependencies = "";
 
-      var options = {
-        height: 275,
-        width: 2000
-      };
+          // Pour chaque dépendance de la tâche
+          $.each(task.dependencies, function(k, dependencie){
+            dependencies += dependencie.predecessor_id.toString()+",";
+          });
+          dependencies = dependencies.replace(/,\s*$/, "");
+          var date = task.date_begin_plan;
+          var date_array = date.split("-");
+          data.addRow([task.id.toString(), task.title, resources,
+           new Date(date_array[0], date_array[1]-1, date_array[2]), null, daysToMilliseconds(task.duration_plan),  task.percent_done,  dependencies]);
+          /************* Fin création des entrées pour le Gantt Chart *************/
+          var line = '<tr id="gantttask'+task.id+'" >';
+          line += '<td id="gantttask'+task.id+'Name">'+task.title+'</td>';
+          line += '<td><button class="btn btn-warning btn-xs btn-detail open-modal-gantttask" value="'+ task.id +'">Voir/Modifier</button>';
+          if(canModify){
+            line += '<button class="btn btn-xs btn-danger btn-delete delete-gantttask" value="'+ task.id +'">Supprimer</button>';
+          }
+          line += '</td></tr>';
+          $('#listTasks > tbody').append(line);
+          /************* Mise à jour des champs de la liste ******************/
+           heightTot += 42;
+        });
+        var widthTot = $('#container_gantt').width() * ($('#widthGantt').val()/100);
+        var options = {
+          height: heightTot,
+          width: widthTot
+        };
 
-      var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
+        var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
 
-      chart.draw(data, options);
+        chart.draw(data, options);
+      });
     }
   </script>
 <div class="container">
@@ -47,17 +76,32 @@
 
     <div class="col-md-12">
       <h3>Gantt</h3>
-      <div style="overflow-x:scroll;overflow-y:hidden" class="col-md-12">
+      <div style="overflow-x:scroll;overflow-y:scroll" class="col-md-12" id="container_gantt">
         <div id="chart_div"></div>
       </div>
-
+      <div class="col-md-12">
+        <div class="col-md-2">
+          <button class="btn btn-primary" onclick="drawChart();">Mettre à jour</button>
+        </div>
+        <div class="col-md-10">
+          <input type="range" class="form-control" id="widthGantt" min="100" max="1000" value="100" step="10" />
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <hr/>
+      @if($project->modify_gantt())
+      <a href="#" value="0" class="btn btn-success open-modal-gantttask">Ajouter une nouvelle tâche</a> <!--Open Modal-->
       @if($project->see_gantt())
       <h2>Tâches</h2>
-      <table class="table">
+      <table class="table" id="listTasks">
         <tr>
           <th>Nom</th>
           <th>Action</th>
         </tr>
+        <tbody>
+          <tr><td>test</td></tr>
+        </tbody>
         @foreach ($project->gantttasks as $task)
         <tr id="gantttask{{$task->id}}">
           <td id="gantttask{{$task->id}}Name">{{$task->title}}</td>
@@ -70,8 +114,6 @@
         </tr>
       @endforeach
       </table>
-      @if($project->modify_gantt())
-      <a href="#" value="0" class="btn btn-success open-modal-gantttask">Ajouter une nouvelle tâche</a> <!--Open Modal-->
       @endif
       <!-- END : Task -->
     @endif
@@ -83,8 +125,8 @@
 </div>
 
 
-@if($project->see_resources())
-<!--******************************MODALS EDIT RESOURCE*****************************-->
+@if($project->see_gantt())
+<!--******************************MODALS EDIT TASK*****************************-->
 <div class="modal fade" id="gantttaskModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -207,6 +249,12 @@
                       </div>
                     </div>
                   </div>
+                  <div class="row">
+                    <div class="col-md-12">
+
+                      Pourcentage terminé : <input type="range" id="percent_done" value="0" min="0" max="100"/>
+                    </div>
+                  </div>
                 </form>
               </div>
             </div>
@@ -231,7 +279,7 @@ $(document).ready(function(){
     }
 });
     @if($project->see_gantt())
-    $('.open-modal-gantttask').click(function(){
+    $('body').on('click', '.open-modal-gantttask', function() {
         var gantttask_id = $(this).val();
         // Ici on va remplir le select des ressources.
         $.get('/project/{{$project->id}}/resources', function(resources){
@@ -287,6 +335,7 @@ $(document).ready(function(){
           $('#date_begin_real').val("");
           $('#duration_real').val("");
           $('#hours_real').val("");
+          $('#percent_done').val(0);
         }else{
           // On prépare le formulaire d'EDITION
           $.get('/gantttask' + '/' + gantttask_id, function (data) {
@@ -302,6 +351,7 @@ $(document).ready(function(){
               $('#date_begin_real').val(data.date_begin_real);
               $('#duration_real').val(data.duration_real);
               $('#hours_real').val(data.hours_real);
+              $('#percent_done').val(data.percent_done);
               $("#parent option[value='"+data.parent_id+"']").prop('selected', true);
               var id_resources = [];
               $.each(data.resources, function(i, resource){
@@ -320,7 +370,7 @@ $(document).ready(function(){
         $('#gantttaskModal').modal('show');
 
 
-        });
+      });
         @endif
 
         @if($project->modify_gantt())
@@ -359,6 +409,7 @@ $(document).ready(function(){
                 hours_plan: $('#hours_plan').val(),
                 date_begin_real: $('#date_begin_real').val(),
                 duration_real: $('#duration_real').val(),
+                percent_done: $('#percent_done').val(),
                 hours_real: $('#hours_real').val(),
             }
 
@@ -380,10 +431,6 @@ $(document).ready(function(){
                 data: formData,
                 dataType: 'json',
                 success: function (data) {
-
-
-                    //$('#frmGantttask').trigger("reset");
-                    console.log("CA A MARCHE");
                     $('#gantttaskModal').modal('hide')
                 },
                 error: function (data) {
@@ -395,8 +442,9 @@ $(document).ready(function(){
 
 
 
-    $('.delete-gantttask').click(function(){
-      if(confirm("Voulez-vous vraiment supprimer cette ressource ?")){
+
+    $('body').on('click', '.delete-gantttask', function() {
+      if(confirm("Voulez-vous vraiment supprimer cette tâche ?")){
         var gantttask_id = $(this).val();
 
         $.ajax({
@@ -404,12 +452,12 @@ $(document).ready(function(){
             url: '/gantttask/' + gantttask_id,
             success: function (data) {
 
-                $("#gantttask" + gantttask_id).remove();
             },
             error: function (data) {
                 console.log('Error:', data);
             }
         });
+        drawChart();
       }
     });
     @endif

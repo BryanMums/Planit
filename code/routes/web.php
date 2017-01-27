@@ -12,6 +12,7 @@
 */
 use App\Collaborater;
 use App\Resource;
+use App\Project;
 
 Route::get('/', function () {
     return view('welcome');
@@ -24,14 +25,24 @@ Route::get('autocomplete', function()
     return view('autocomplete');
 });
 
-Route::get('getusers', function()
+Route::get('getusers/{project}', function(Project $project)
 {
     $term = strtolower(Request::input('term'));
 
-    $users = App\User::where('email','LIKE', '%'.$term.'%')->orWhere('name', 'LIKE', '%'.$term.'%')->get();
 
+    $users = App\User::where('email','LIKE', '%'.$term.'%')->orWhere('name', 'LIKE', '%'.$term.'%')->get();
+    $return_array = [];
     foreach ($users as $user) {
-      $return_array[] = array('value' => $user->email, 'id' => $user->id);
+      if($user->id != Auth::id()){
+        $there = false;
+        foreach($project->collaboraters as $collaborater){
+          if($collaborater->user_id == $user->id)
+            $there = true;
+        }
+        if(!$there){
+            $return_array[] = array('value' => $user->email, 'id' => $user->id);
+        }
+      }
     }
     return Response::json($return_array);
 });
@@ -44,6 +55,10 @@ Route::get('project/{project}/finance', 'ProjectsController@finance');
 Route::get('project/{project}/planification', 'ProjectsController@planification');
 Route::get('project/{project}/statistics', 'ProjectsController@statistics');
 
+Route::resource('project', 'ProjectsController', ['only' => [
+  'destroy', 'update'
+  ]]);
+Route::get('project/{project}/json', 'ProjectsController@ProjectJson');
 
 Route::post('/project/create', 'ProjectsController@store');
 Route::delete('/project/{project}/delete', 'ProjectsController@delete');
@@ -57,7 +72,7 @@ Route::post('/project/{project}/collaborater/create', 'ProjectsController@storeC
 Route::resource('collaborater', 'CollaboratersController', ['only' => [
   'show', 'store', 'update', 'destroy'
   ]]);
-
+Route::get('/project/{project}/quit', 'ProjectsController@quitProject');
 
 /**********************RESOURCES***********************/
 Route::get('/project/{project}/resource/create', 'ProjectsController@createResource');
@@ -67,6 +82,7 @@ Route::get('/project/{id}/resources', 'ProjectsController@getResources');
 Route::resource('resource', 'ResourcesController', ['only' => [
   'show', 'store', 'update', 'destroy'
   ]]);
+
 
 /*******************COSTS**************************/
 Route::get('/project/{project}/cost/create', 'ProjectsController@createCost');

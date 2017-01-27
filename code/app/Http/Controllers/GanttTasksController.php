@@ -13,6 +13,7 @@ use Response;
 
 class GanttTasksController extends Controller
 {
+    // Permet de stocker les tâches.
     public function store(Request $request)
     {
       $project = Project::findOrFail($request->project_id);
@@ -20,7 +21,7 @@ class GanttTasksController extends Controller
         $input = array_filter($request->only('parent_id', 'order_id', 'title',
                                               'description', 'date_begin_plan', 'duration_plan',
                                               'hours_plan', 'date_begin_real', 'duration_real',
-                                              'hours_real', 'color'), 'strlen');
+                                              'hours_real', 'color', 'percent_done'), 'strlen');
         // Création de la tâche
         $ganttTask = $project->gantttasks()->create($input);
 
@@ -41,6 +42,7 @@ class GanttTasksController extends Controller
       return false;
     }
 
+    // Permet de mettre à jour une tâche.
     public function update(Request $request, $id)
     {
       $ganttTask = GanttTask::findOrFail($id);
@@ -50,7 +52,7 @@ class GanttTasksController extends Controller
         $ganttTask->update(array_filter($request->only('parent_id', 'order_id', 'title',
                                          'description', 'date_begin_plan', 'duration_plan',
                                          'hours_plan', 'date_begin_real', 'duration_real',
-                                         'hours_real', 'color'), 'strlen'));
+                                         'hours_real', 'color', 'percent_done'), 'strlen'));
 
         // Mise à jour des ressources.
         $ganttTask->resources()->detach();
@@ -71,6 +73,7 @@ class GanttTasksController extends Controller
       return false;
     }
 
+    // Permet de récupérer les informations d'une tâche, retournées en JSON.
     public function show($id)
     {
       $ganttTask = GanttTask::with('resources', 'dependencies')->findOrFail($id);
@@ -81,6 +84,7 @@ class GanttTasksController extends Controller
       return false;
     }
 
+    // Permet de supprimer une tâche.
     public function destroy($id)
     {
       $ganttTask = GanttTask::findOrFail($id);

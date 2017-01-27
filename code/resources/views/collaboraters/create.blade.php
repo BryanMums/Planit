@@ -99,7 +99,7 @@
 <script type="text/javascript">
     $(function() {
         $("#user_search").autocomplete({
-            source: "/getusers",
+            source: "/getusers/{{$project->id}}",
             minLength: 1,
             select: function( event, ui ) {
                 $('#id_user').val(ui.item.id);

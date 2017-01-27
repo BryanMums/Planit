@@ -12,12 +12,7 @@ class CollaboratersController extends Controller
 {
 
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    // Permet de stocker les collaborateurs.
     public function store(Request $request)
     {
       $project = Project::findOrFail($request->project_id);
@@ -30,13 +25,7 @@ class CollaboratersController extends Controller
     }
 
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    // Permet de mettre à jour le collaborateur.
     public function update(Request $request, $id)
     {
       $collaborater = Collaborater::findOrFail($id);
@@ -49,6 +38,7 @@ class CollaboratersController extends Controller
       return false;
     }
 
+    // Permet de récupérer les informations d'un collaborateur selon son id, retournées en JSON.
     public function show($id)
     {
       $collaborater = Collaborater::findOrFail($id);
@@ -58,12 +48,7 @@ class CollaboratersController extends Controller
       return false;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    // Permet de supprimer un collaborateur selon son id.
     public function destroy($id)
     {
       $collaborater = Collaborater::findOrFail($id);

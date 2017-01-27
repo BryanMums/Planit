@@ -11,12 +11,7 @@ class CostsController extends Controller
 {
 
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    // Permet de stocker des coûts.
     public function store(Request $request)
     {
         $project = Project::findOrFail($request->project_id);
@@ -27,12 +22,7 @@ class CostsController extends Controller
         return Reponse::json();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    // Permet de récupérer les informations d'un coût, retournées en JSON.
     public function show($id)
     {
         $cost = Cost::findOrFail($id);
@@ -42,13 +32,7 @@ class CostsController extends Controller
     }
 
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    // Permet de mettre à jour un coût.
     public function update(Request $request, $id)
     {
         $cost = Cost::findOrFail($id);
@@ -62,12 +46,7 @@ class CostsController extends Controller
         return false;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    // Permet de supprimer un coût.
     public function destroy($id)
     {
         $cost = Cost::findOrFail($id);
