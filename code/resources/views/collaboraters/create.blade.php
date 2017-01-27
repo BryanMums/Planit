@@ -12,8 +12,8 @@
             <input type="hidden" name="project_id" value="{{$project->id}}">
             <div class="form-group">
               <label for="name">Email du collaborateur</label>
-              <input id="user_search" type="text" name="user_search" class="form-control"/ >
-              <input id="id_user" type="hidden" name="user_id" value=""/>
+              <input id="user_search" type="text" name="user_search" class="form-control"/  required>
+              <input id="id_user" type="hidden" name="user_id" value=""  required/>
             </div>
             <h3>Droits</h3>
             <div class="form-group">
@@ -21,39 +21,39 @@
               <div class="col-md-4">
                 <label>Informations de base</label>
                 <div class="radio">
-                  <label><input type="radio" name="informations_rights" value=0>Aucun droit</label>
+                  <label><input type="radio" name="informations_rights" value=0 required>Aucun droit</label>
                 </div>
                 <div class="radio">
-                  <label><input type="radio" name="informations_rights" value=1>Lecture</label>
+                  <label><input type="radio" name="informations_rights" value=1 required>Lecture</label>
                 </div>
                 <div class="radio">
-                  <label><input type="radio" name="informations_rights" value=2>Modification</label>
+                  <label><input type="radio" name="informations_rights" value=2 required>Modification</label>
                 </div>
               </div>
 
               <div class="col-md-4">
                 <label>Collaborateurs</label>
                 <div class="radio">
-                  <label><input type="radio" name="collaboraters_rights" value=0>Aucun droit</label>
+                  <label><input type="radio" name="collaboraters_rights" value=0 required>Aucun droit</label>
                 </div>
                 <div class="radio">
-                  <label><input type="radio" name="collaboraters_rights" value=1>Lecture</label>
+                  <label><input type="radio" name="collaboraters_rights" value=1 required>Lecture</label>
                 </div>
                 <div class="radio">
-                  <label><input type="radio" name="collaboraters_rights" value=2>Modification</label>
+                  <label><input type="radio" name="collaboraters_rights" value=2 required>Modification</label>
                 </div>
               </div>
 
               <div class="col-md-4">
                 <label>Ressources</label>
                 <div class="radio">
-                  <label><input type="radio" name="resources_rights" value=0>Aucun droit</label>
+                  <label><input type="radio" name="resources_rights" value=0 required>Aucun droit</label>
                 </div>
                 <div class="radio">
-                  <label><input type="radio" name="resources_rights" value=1>Lecture</label>
+                  <label><input type="radio" name="resources_rights" value=1 required>Lecture</label>
                 </div>
                 <div class="radio">
-                  <label><input type="radio" name="resources_rights" value=2>Modification</label>
+                  <label><input type="radio" name="resources_rights" value=2 required>Modification</label>
                 </div>
               </div>
             </div>
@@ -62,29 +62,28 @@
               <div class="col-md-4">
                 <label>Gantt</label>
                 <div class="radio">
-                  <label><input type="radio" name="gantt_rights" value=0>Aucun droit</label>
+                  <label><input type="radio" name="gantt_rights" value=0 required>Aucun droit</label>
                 </div>
                 <div class="radio">
-                  <label><input type="radio" name="gantt_rights" value=1>Lecture</label>
+                  <label><input type="radio" name="gantt_rights" value=1 required>Lecture</label>
                 </div>
                 <div class="radio">
-                  <label><input type="radio" name="gantt_rights" value=2>Modification</label>
+                  <label><input type="radio" name="gantt_rights" value=2 required>Modification</label>
                 </div>
               </div>
 
               <div class="col-md-4">
                 <label>Budget</label>
                 <div class="radio">
-                  <label><input type="radio" name="budget_rights" value=0>Aucun droit</label>
+                  <label><input type="radio" name="budget_rights" value=0 required>Aucun droit</label>
                 </div>
                 <div class="radio">
-                  <label><input type="radio" name="budget_rights" value=1>Lecture</label>
+                  <label><input type="radio" name="budget_rights" value=1 required>Lecture</label>
                 </div>
                 <div class="radio">
-                  <label><input type="radio" name="budget_rights" value=2>Modification</label>
+                  <label><input type="radio" name="budget_rights" value=2 required>Modification</label>
                 </div>
               </div>
-
             </div>
           </div>
 

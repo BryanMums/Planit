@@ -10,7 +10,7 @@
             <input type="hidden" name="project_id" value="{{$project->id}}">
             <div class="form-group">
               <label for="name">Titre</label>
-              <input id="name" type="text" name="name" class="form-control"/ >
+              <input id="name" type="text" name="name" class="form-control"/ required>
             </div>
             <div class="form-group">
               <label for="description">Description</label>
@@ -18,7 +18,7 @@
             </div>
             <div class="form-group">
               <label for="value">Coût</label>
-              <input id="value" type="number" name="value" class="form-control"/ >
+              <input id="value" type="number" name="value" class="form-control"/ required >
             </div>
 
             <div class="form-group">

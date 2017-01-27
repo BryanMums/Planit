@@ -29,7 +29,6 @@ class HomeController extends Controller
     public function index()
     {
         $user = Auth::user();
-        /*$ids_pro = DB::table('collaboraters')->where('user_id', $user->id)->pluck('project_id');*/  
         return view('home', compact('user'));
     }
 }

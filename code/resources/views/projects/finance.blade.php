@@ -24,8 +24,10 @@
                   <td id="cost{{$cost->id}}Description">{{$cost->description}}</td>
                   <td id="cost{{$cost->id}}Value">{{$cost->value}}</td>
                   <td>
-                    <button class="btn btn-warning btn-xs btn-detail open-modal-cost" value="{{$cost->id}}">Modifier</button>
-                    <button class="btn btn-xs btn-danger btn-delete delete-cost" value="{{$cost->id}}">Supprimer</button>
+                    @if ($project->modify_finance())
+                      <button class="btn btn-warning btn-xs btn-detail open-modal-cost" value="{{$cost->id}}">Modifier</button>
+                      <button class="btn btn-xs btn-danger btn-delete delete-cost" value="{{$cost->id}}">Supprimer</button>
+                    @endif
                   </td>
                 </tr>
               @endforeach
@@ -34,7 +36,9 @@
                 <td id="costsTotal"><b>{{$project->costs->sum('value')}}</b></td>
               </tr>
             </table>
-            <a href="/project/{{ $project->id }}/cost/create" class="btn btn-success">Ajouter un nouveau coût</a>
+            @if ($project->modify_finance())
+              <a href="/project/{{ $project->id }}/cost/create" class="btn btn-success">Ajouter un nouveau coût</a>
+            @endif
         </div>
     </div>
 </div>
@@ -42,7 +46,7 @@
 
 
 
-<!--******************************MODALS EDIT COLLABORATER*****************************-->
+<!--******************************MODALS EDIT COST*****************************-->
 <div class="modal fade" id="costModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -57,7 +61,7 @@
                   <input type="hidden" name="project_id" value="{{$project->id}}">
                   <div class="form-group">
                     <label for="name">Titre</label>
-                    <input id="name" type="text" name="name" class="form-control"/ >
+                    <input id="name" type="text" name="name" class="form-control"/  required>
                   </div>
                   <div class="form-group">
                     <label for="description">Description</label>
@@ -65,7 +69,7 @@
                   </div>
                   <div class="form-group">
                     <label for="value">Coût</label>
-                    <input id="value" type="number" name="value" class="form-control"/ >
+                    <input id="value" type="number" name="value" class="form-control"/  required>
                   </div>
                 </form>
               </div>

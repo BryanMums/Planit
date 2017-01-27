@@ -9,7 +9,7 @@
             <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <div class="form-group">
               <label for="name">Titre du projet</label>
-              <input type="text" name="name" class="form-control"/ >
+              <input type="text" name="name" class="form-control"/ required >
             </div>
             <div class="form-group">
               <label for="description">Description</label>
@@ -17,15 +17,15 @@
             </div>
             <div class="form-group col-md-4">
               <label for="budget">Budget</label>
-              <input type="number" name="budget" class="form-control"/ >
+              <input type="number" name="budget" class="form-control"/ required >
             </div>
             <div class="form-group col-md-4">
               <label for="date_begin">Date de début</label>
-              <input type="date" name="date_begin" class="form-control"/ >
+              <input type="date" name="date_begin" class="form-control"/ required >
             </div>
             <div class="form-group col-md-4">
               <label for="date_end">Date de fin</label>
-              <input type="date" name="date_end" class="form-control"/ >
+              <input type="date" name="date_end" class="form-control"/ required >
             </div>
             <hr/>
             <h3>Informations sur le client</h3>

@@ -25,6 +25,7 @@ Route::get('autocomplete', function()
     return view('autocomplete');
 });
 
+// Autocompletion pour l'ajout du collaborateur
 Route::get('getusers/{project}', function(Project $project)
 {
     $term = strtolower(Request::input('term'));
@@ -94,7 +95,7 @@ Route::resource('cost', 'CostsController', ['only' => [
 /*****************TASKS**************************/
 Route::get('/project/{id}/tasks', 'ProjectsController@getTasks');
 Route::put('/project/{project}/gantttask/{task}', 'ProjectsController@updateGantttask');
-Route::post('/project/{project}/gantttask', 'ProjectsController@createGantttask');
+Route::post('/project/{project}/gantttask', 'ProjectsController@storeGantttask');
 Route::resource('gantttask', 'GanttTasksController', ['only' => [
   'show', 'store', 'update', 'destroy'
   ]]);

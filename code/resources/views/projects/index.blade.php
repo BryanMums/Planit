@@ -3,25 +3,25 @@
 @section('content')
   <div class="container">
     <div class="row">
-      <h2><b><span id="#view_title">{{ $project->name }}</span></b> | Accueil </h2>
+      <h2><b><span id="view_title">{{ $project->name }}</span></b> | Accueil </h2>
       <hr/>
       <!-- Colonne de gauche -->
       @if ($project->see_informations())
         <div class="col-md-6">
           <h2>Informations</h2>
           <h4>Description</h4>
-          <p id="#view_description">{{ $project->description }}</p>
+          <p id="view_description">{{ $project->description }}</p>
 
           <h4>Budget</h4>
-          <p id="#view_budget">{{ $project->budget }} CHF</p>
+          <p id="view_budget">{{ $project->budget }} CHF</p>
 
           <div class="col-md-6">
             <h4>Date de début</h4>
-            <p id="#view_date_begin">{{ $project->date_begin }}</p>
+            <p id="view_date_begin">{{ $project->date_begin }}</p>
           </div>
           <div class="col-md-6">
             <h4>Date de fin</h4>
-            <p id="#view_date_end">{{ $project->date_end }}</p>
+            <p id="view_date_end">{{ $project->date_end }}</p>
           </div>
 
           <h4>Infos du client</h4>
@@ -111,7 +111,7 @@
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <div class="form-group">
                   <label for="name">Titre du projet</label>
-                  <input type="text" name="name" id="update_title" class="form-control"/ >
+                  <input type="text" name="name" id="update_title" class="form-control"/  required>
                 </div>
                 <div class="form-group">
                   <label for="description">Description</label>
@@ -119,15 +119,15 @@
                 </div>
                 <div class="form-group col-md-4">
                   <label for="budget">Budget</label>
-                  <input type="number" name="budget" id="update_budget" class="form-control"/ >
+                  <input type="number" name="budget" id="update_budget" class="form-control" required/ >
                 </div>
                 <div class="form-group col-md-4">
                   <label for="date_begin">Date de début</label>
-                  <input type="date" name="date_begin" id="update_date_begin" class="form-control"/ >
+                  <input type="date" name="date_begin" id="update_date_begin" class="form-control" required/ >
                 </div>
                 <div class="form-group col-md-4">
                   <label for="date_end">Date de fin</label>
-                  <input type="date" name="date_end" id="update_date_end" class="form-control"/ >
+                  <input type="date" name="date_end" id="update_date_end" class="form-control" required/ >
                 </div>
                 <h3>Informations sur le client</h3>
                 <h5>Laisser vide si projet personnel</h5>
@@ -173,65 +173,65 @@
                 <div class="col-md-4">
                   <label>Informations de base</label>
                   <div class="radio">
-                    <label><input id="info0" type="radio" name="inforadio" value=0>Aucun droit</label>
+                    <label><input id="info0" type="radio" name="inforadio" value=0 required>Aucun droit</label>
                   </div>
                   <div class="radio">
-                    <label><input id="info1" type="radio" name="inforadio" value=1>Lecture</label>
+                    <label><input id="info1" type="radio" name="inforadio" value=1 required>Lecture</label>
                   </div>
                   <div class="radio">
-                    <label><input id="info2" type="radio" name="inforadio" value=2>Modification</label>
+                    <label><input id="info2" type="radio" name="inforadio" value=2 required>Modification</label>
                   </div>
                 </div>
 
                 <div class="col-md-4">
                   <label>Collaborateurs</label>
                   <div class="radio">
-                    <label><input type="radio" name="collaboradio" value=0>Aucun droit</label>
+                    <label><input type="radio" name="collaboradio" value=0 required>Aucun droit</label>
                   </div>
                   <div class="radio">
-                    <label><input type="radio" name="collaboradio" value=1>Lecture</label>
+                    <label><input type="radio" name="collaboradio" value=1 required>Lecture</label>
                   </div>
                   <div class="radio">
-                    <label><input type="radio" name="collaboradio" value=2>Modification</label>
+                    <label><input type="radio" name="collaboradio" value=2 required>Modification</label>
                   </div>
                 </div>
 
                 <div class="col-md-4">
                   <label>Ressources</label>
                   <div class="radio">
-                    <label><input type="radio" name="resoradio" value=0>Aucun droit</label>
+                    <label><input type="radio" name="resoradio" value=0 required>Aucun droit</label>
                   </div>
                   <div class="radio">
-                    <label><input type="radio" name="resoradio" value=1>Lecture</label>
+                    <label><input type="radio" name="resoradio" value=1 required>Lecture</label>
                   </div>
                   <div class="radio">
-                    <label><input type="radio" name="resoradio" value=2>Modification</label>
+                    <label><input type="radio" name="resoradio" value=2 required>Modification</label>
                   </div>
                 </div>
 
                 <div class="col-md-4">
                   <label>Gantt</label>
                   <div class="radio">
-                    <label><input type="radio" name="ganttradio" value=0>Aucun droit</label>
+                    <label><input type="radio" name="ganttradio" value=0 required>Aucun droit</label>
                   </div>
                   <div class="radio">
-                    <label><input type="radio" name="ganttradio" value=1>Lecture</label>
+                    <label><input type="radio" name="ganttradio" value=1 required>Lecture</label>
                   </div>
                   <div class="radio">
-                    <label><input type="radio" name="ganttradio" value=2>Modification</label>
+                    <label><input type="radio" name="ganttradio" value=2 required>Modification</label>
                   </div>
                 </div>
 
                 <div class="col-md-4">
                   <label>Budget</label>
                   <div class="radio">
-                    <label><input type="radio" name="budgetradio" value=0>Aucun droit</label>
+                    <label><input type="radio" name="budgetradio" value=0 required>Aucun droit</label>
                   </div>
                   <div class="radio">
-                    <label><input type="radio" name="budgetradio" value=1>Lecture</label>
+                    <label><input type="radio" name="budgetradio" value=1 required>Lecture</label>
                   </div>
                   <div class="radio">
-                    <label><input type="radio" name="budgetradio" value=2>Modification</label>
+                    <label><input type="radio" name="budgetradio" value=2 required>Modification</label>
                   </div>
                 </div>
               </div>
@@ -265,11 +265,11 @@
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <div class="form-group">
                       <label for="firstname">Prénom</label>
-                      <input id="firstname" type="text" name="firstname" class="form-control"/ >
+                      <input id="firstname" type="text" name="firstname" class="form-control" required/ >
                     </div>
                     <div class="form-group">
                       <label for="lastname">Nom</label>
-                      <input id="lastname" type="text" name="lastname" class="form-control"/ >
+                      <input id="lastname" type="text" name="lastname" class="form-control" required/ >
                     </div>
                     <div class="form-group">
                       <label for="email">Email</label>
@@ -285,13 +285,13 @@
                   <div class="col-md-6">
                     <div class="form-group">
                       <label for="cost_initial">Coût initial</label>
-                      <input id="cost_initial" type="number" name="cost_initial" class="form-control"/ >
+                      <input id="cost_initial" type="number" name="cost_initial" class="form-control" required/ >
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
                       <label for="cost_per_hour">Coût à l'heure</label>
-                      <input id="cost_per_hour" type="number" name="cost_per_hour" class="form-control"/ >
+                      <input id="cost_per_hour" type="number" name="cost_per_hour" class="form-control" required/ >
                     </div>
                   </div>
                 </div>
@@ -387,12 +387,13 @@
           data: formData,
           dataType: 'json',
           success: function (data) {
+            console.log(data);
 
-            $('#view_title').html(data.name);
-            $('#view_description').html(data.description);
-            $('#view_budget').html(data.budget);
-            $('#view_date_begin').html(data.date_begin);
-            $('#view_date_end').html(data.date_end);
+            $('span#view_title').text(data.name);
+            $('p#view_description').text(data.description);
+            $('p#view_budget').text(data.budget+' CHF');
+            $('p#view_date_begin').text(data.date_begin);
+            $('p#view_date_end').text(data.date_end);
             $('#frmInformations').trigger("reset");
 
             $('#informationsModal').modal('hide')

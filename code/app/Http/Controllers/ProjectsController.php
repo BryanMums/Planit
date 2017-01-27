@@ -200,14 +200,12 @@ class ProjectsController extends Controller
 
     // Permet de retourner sous le format JSON, la liste des ressources du projet.
     public function getResources($id){
-          $resources = Resource::all()->where('project_id', $id);
-          return Response::json($resources);
-    }
-
-    // Permet de retourner sous le format JSON, la liste des tâches du projet.
-    public function getTasks($id){
-        $tasks = GanttTask::with('resources', 'dependencies')->where('project_id', $id)->get();
-        return Response::json($tasks);
+      $project = Project::findOrFail($id);
+      if($project->see_resources()){
+        $resources = Resource::all()->where('project_id', $id);
+        return Response::json($resources);
+      }
+      return false;
     }
 
     /*********METHODS COSTS**************/
@@ -230,17 +228,28 @@ class ProjectsController extends Controller
     }
 
     /*******METHODS TASKS*************/
-    public function createGantttask(Project $project, Request $request){
+    // Méthode appelée pour stocker une tâche.
+    public function storeGantttask(Project $project, Request $request){
       if($project->modify_gantt()){
         $tas = new GanttTasksController;
         return $tas->store($request);
       }
     }
 
+    // Méthode appelée pour mettre à jour une tâche.
     public function updateGantttask(Project $project, GanttTask $task, Request $request){
       if($project->modify_gantt()){
         $tas = new GanttTasksController;
         return $tas->update($request, $task->id);
+      }
+    }
+
+    // Permet de retourner sous le format JSON, la liste des tâches du projet.
+    public function getTasks($id){
+      $project = Project::findOrFail($id);
+      if($project->see_gantt()){
+        $tasks = GanttTask::with('resources', 'dependencies')->where('project_id', $id)->get();
+        return Response::json($tasks);
       }
     }
 

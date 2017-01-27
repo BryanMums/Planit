@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.min.js"></script>
   <script type="text/javascript">
     var canModify = {{ $project->modify_gantt() }}
     google.charts.load('current', {'packages':['gantt']});
@@ -58,6 +57,9 @@
            heightTot += 42;
         });
         var widthTot = $('#container_gantt').width() * ($('#widthGantt').val()/100);
+        if(heightTot < 200){
+          heightTot = 200;
+        }
         var options = {
           height: heightTot,
           width: widthTot
@@ -91,7 +93,8 @@
     <div class="col-md-12">
       <hr/>
       @if($project->modify_gantt())
-      <a href="#" value="0" class="btn btn-success open-modal-gantttask">Ajouter une nouvelle tâche</a> <!--Open Modal-->
+        <a href="#" value="0" class="btn btn-success open-modal-gantttask">Ajouter une nouvelle tâche</a> <!--Open Modal-->
+      @endif
       @if($project->see_gantt())
       <h2>Tâches</h2>
       <table class="table" id="listTasks">
@@ -116,10 +119,6 @@
       </table>
       @endif
       <!-- END : Task -->
-    @endif
-
-
-
     </div>
   </div>
 </div>
@@ -143,7 +142,7 @@
                   <input type="hidden" name="project_id" id="project_id" value="{{$project->id}}">
                   <div class="form-group">
                     <label for="title">Titre</label>
-                    <input id="title" type="text" name="title" class="form-control"/ >
+                    <input id="title" type="text" name="title" class="form-control" required/ >
                   </div>
                 </div>
                 <div class="col-md-4">
@@ -207,19 +206,19 @@
                     <div class="col-md-6">
                       <div class="form-group">
                         <label for="date_begin_plan">Date de début</label>
-                        <input id="date_begin_plan" type="date" name="date_begin_plan" class="form-control"/ >
+                        <input id="date_begin_plan" type="date" name="date_begin_plan" class="form-control" required/ >
                       </div>
                     </div>
                     <div class="col-md-3">
                       <div class="form-group">
                         <label for="duration_plan">Nombre de jours</label>
-                        <input id="duration_plan" type="number" name="duration_plan" class="form-control"/ >
+                        <input id="duration_plan" type="number" name="duration_plan" class="form-control" required/ >
                       </div>
                     </div>
                     <div class="col-md-3">
                       <div class="form-group">
                         <label for="hours_plan">Nombre d'heures</label>
-                        <input id="hours_plan" type="number" name="hours_plan" class="form-control"/ >
+                        <input id="hours_plan" type="number" name="hours_plan" class="form-control" required/ >
                       </div>
                     </div>
                   </div>

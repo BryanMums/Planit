@@ -51,7 +51,7 @@ class CostsController extends Controller
     {
         $cost = Cost::findOrFail($id);
         $project = Project::findOrFail($cost->project_id);
-        if($project->modify_resources()){
+        if($project->modify_finance()){
           $cost = Cost::destroy($id);
           return Response::json($cost);
         }

@@ -10,11 +10,11 @@
             <input type="hidden" name="project_id" value="{{$project->id}}">
             <div class="form-group">
               <label for="firstname">Prénom</label>
-              <input id="firstname" type="text" name="firstname" class="form-control"/ >
+              <input id="firstname" type="text" name="firstname" class="form-control" required/ >
             </div>
             <div class="form-group">
               <label for="lastname">Nom</label>
-              <input id="lastname" type="text" name="lastname" class="form-control"/ >
+              <input id="lastname" type="text" name="lastname" class="form-control" required/ >
             </div>
             <div class="form-group">
               <label for="email">Email</label>
@@ -28,13 +28,13 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="cost_initial">Coût initial</label>
-                  <input id="cost_initial" type="number" name="cost_initial" class="form-control"/ >
+                  <input id="cost_initial" type="number" name="cost_initial" class="form-control" required/ >
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group">
                   <label for="cost_per_hour">Coût à l'heure</label>
-                  <input id="cost_per_hour" type="number" name="cost_per_hour" class="form-control"/ >
+                  <input id="cost_per_hour" type="number" name="cost_per_hour" class="form-control" required/ >
                 </div>
               </div>
             </div>

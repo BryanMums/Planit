@@ -89,7 +89,7 @@ class GanttTasksController extends Controller
     {
       $ganttTask = GanttTask::findOrFail($id);
       $project = Project::findOrFail($ganttTask->project_id);
-      if($project->see_gantt()){
+      if($project->modify_gantt()){
         $ganttTask = GanttTask::destroy($id);
 
         return Reponse::json($ganttTask);
